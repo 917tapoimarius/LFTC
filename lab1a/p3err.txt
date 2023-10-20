@@ -1,0 +1,11 @@
+{
+	int a=list(), 2n, sum=0;
+	read(n);
+	int i=01;
+	while(i<=n){
+		read(a[i]);
+		sum=sum+a[i];
+		i=i+1;
+	}
+	write(sum);
+}
