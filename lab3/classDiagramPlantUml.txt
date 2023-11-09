@@ -43,8 +43,7 @@ class MyScanner {
   -reservedWords: ArrayList<String>
   -operatorsForPattern: ArrayList<String>
   -separatorsForPattern: ArrayList<String>
-  patternBuilder: StringBuilder
-  pattern: Pattern
+  -pattern: Pattern
   -symbolTable: SymbolTable<String>
   -programInternalForm: ProgramInternalForm
   -programLines: List<String>
