@@ -40,14 +40,13 @@ public class MyScanner {
         return Pattern.compile("^0|([+-]?[1-9][0-9]*)$").matcher(token).matches();
     }
 
-    public void readString(Iterator<String> tokenizer) {
+    public void processString(Iterator<String> tokenizer) {
         StringBuilder stringBuilder = new StringBuilder();
         boolean insideString = false;
 
         while (tokenizer.hasNext()) {
             String currentToken = tokenizer.next();
 
-            // If we are scanning a string that has a space inside it:
             if (currentToken.equals(" ")) {
                 if (insideString) {
                     stringBuilder.append(" ");
@@ -55,21 +54,21 @@ public class MyScanner {
                 continue;
             }
 
-            if (insideString) {
-                if (currentToken.equals("\"")) {
+            if (currentToken.equals("\"")) {
+                if (insideString) {
                     // End of the string, add it to the internal form
                     String stringConstant = "\"%s\"".formatted(stringBuilder.toString());
                     programInternalForm.addIdentifierConstant(stringBuilder.toString(), symbolTable.add(stringConstant));
                     stringBuilder.setLength(0); // Clear the StringBuilder
                 }
                 insideString = !insideString; // Toggle the insideString flag
-            }
-            else {
+            } else if (insideString) {
                 // Inside a string, append the current token
                 stringBuilder.append(currentToken);
             }
         }
     }
+
 
     public void scan() throws IOException {
         StringBuilder lexicalError = new StringBuilder();
@@ -82,10 +81,12 @@ public class MyScanner {
 
             while (matcher.find()) {
                 if (position != matcher.start()) {
+                    //  If there is text between the current position and the start of the match, adds it to the list as
+                    //  a token.
                     tokens.add(programLine.substring(position, matcher.start()));
                 }
                 tokens.add(matcher.group());
-                position = matcher.end();
+                position = matcher.end(); // Updates the position to the end of the last match.
             }
 
             Iterator<String> tokenizer = tokens.stream().iterator();
@@ -107,7 +108,7 @@ public class MyScanner {
                     programInternalForm.addIdentifierConstant(character, symbolTable.add(character));
                 } else if (token.equals("\"")) {
                     programInternalForm.addOperatorSeparatorReservedWord(token);
-                    readString(tokenizer);
+                    processString(tokenizer);
                 } else {
                     lexicalError.append("Lexical error found on line %s! Could not categorize %s\n".formatted(line, token));
                 }
