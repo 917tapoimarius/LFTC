@@ -1,0 +1,63 @@
+@startuml
+
+class Main {
+  +main(args: String[]): void
+}
+
+class HashNode<K, V> {
+  key: K
+  value: V
+  hashCode: int
+  next: HashNode<K, V>
+  +HashNode(key: K, value: V, hashCode: int)
+}
+
+class SymbolTable<K> {
+  -THRESHOLD: double
+  -symbolTable: ArrayList<HashNode<K, Integer>>
+  -capacity: int
+  -size: int
+  +SymbolTable()
+  +size(): int
+  +isEmpty(): boolean
+  -hashCode(key: K): int
+  -getSymbolTableIndex(key: K): int
+  -elementIsEqualToNode(node: HashNode<K, Integer>, key: K, hashCode: int): boolean
+  -resize(): void
+  +remove(key: K): Integer
+  +get(key: K): Integer
+  +add(key: K): Integer
+  +toString(): String
+}
+
+class ProgramInternalForm {
+  -pif: Map<String, Integer>
+  +addOperatorSeparatorReservedWord(token: String): void
+  +addIdentifierConstant(token: String, symbolTablePosition: Integer): void
+  +toString(): String
+}
+
+class MyScanner {
+  -operators: ArrayList<String>
+  -separators: ArrayList<String>
+  -reservedWords: ArrayList<String>
+  -operatorsForPattern: ArrayList<String>
+  -separatorsForPattern: ArrayList<String>
+  -pattern: Pattern
+  -symbolTable: SymbolTable<String>
+  -programInternalForm: ProgramInternalForm
+  -programLines: List<String>
+  +MyScanner(filePath: String)
+  -isIdentifier(token: String): boolean
+  -isIntegerConstant(token: String): boolean
+  +readString(tokenizer: Iterator<String>): void
+  +scan(): void
+  +writeToFiles(): void
+}
+
+Main --o MyScanner
+SymbolTable --o HashNode
+MyScanner --o ProgramInternalForm
+MyScanner --o SymbolTable
+
+@enduml
