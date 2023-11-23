@@ -81,7 +81,6 @@ class FiniteAutomata {
     +initialStateToString(): String
     +finalStatesToString(): String
     -checkDFA(): boolean
-    +toString(): String
 }
 
 Main --o MyScanner

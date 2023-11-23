@@ -132,17 +132,4 @@ public class FiniteAutomata {
 
         return true;
     }
-
-
-    @Override
-    public String toString() {
-        return "FiniteAutomata{" +
-                "states=" + states +
-                ", alphabet=" + alphabet +
-                ", transitions=" + transitions +
-                ", initialState='" + initialState + '\'' +
-                ", finalStates=" + finalStates +
-                ", isDeterministic=" + isDeterministic +
-                '}';
-    }
 }
