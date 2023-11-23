@@ -8,9 +8,9 @@ public class Main {
 
     static {
         try {
-            //MyScanner myScanner = new MyScanner("../lab1a/p1.txt");
-            //MyScanner myScanner = new MyScanner("../lab1a/p2.txt");
-            //MyScanner myScanner = new MyScanner("../lab1a/p3.txt");
+            //myScanner = new MyScanner("../lab1a/p1.txt");
+            //myScanner = new MyScanner("../lab1a/p2.txt");
+            //myScanner = new MyScanner("../lab1a/p3.txt");
             myScanner = new MyScanner("../lab1a/p3err.txt");
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -48,19 +48,19 @@ public class Main {
         System.out.println("User option: ");
         int userOption = scanner.nextInt();
         if (userOption == 1){
-            finiteAutomata.statesToString();
+            System.out.println(finiteAutomata.statesToString());
         }
         else if (userOption == 2){
-            finiteAutomata.alphabetToString();
+            System.out.println(finiteAutomata.alphabetToString());
         }
         else if (userOption == 3){
-            finiteAutomata.transitionsToString();
+            System.out.println(finiteAutomata.transitionsToString());
         }
         else if (userOption == 4){
-            finiteAutomata.initialStateToString();
+            System.out.println(finiteAutomata.initialStateToString());
         }
         else if (userOption == 5){
-            finiteAutomata.finalStatesToString();
+            System.out.println(finiteAutomata.finalStatesToString());
         }
         else if (userOption != 0)
             System.out.println("Invalid option!");
@@ -68,11 +68,13 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException {
+        int userOption;
+
         while (true){
             System.out.println("\n");
             menu();
             System.out.println("User option: ");
-            int userOption = scanner.nextInt();
+            userOption = scanner.nextInt();
             if (userOption == 0) {
                 System.out.println("Goodbye!");
                 break;

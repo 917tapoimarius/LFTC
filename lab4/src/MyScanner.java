@@ -25,19 +25,27 @@ public class MyScanner {
     private final ProgramInternalForm programInternalForm;
     private final List<String> programLines;
 
-    public MyScanner(String filePath) throws FileNotFoundException {
+    FiniteAutomata finiteAutomataIdentifier;
+    FiniteAutomata finiteAutomataIntegerConstant;
+
+    public MyScanner(String filePath) throws IOException {
         this.symbolTable = new SymbolTable<>();
         this.programInternalForm = new ProgramInternalForm();
         BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath));
         programLines = bufferedReader.lines().toList();
+
+        finiteAutomataIdentifier = new FiniteAutomata("src/FiniteAutomata/FAIdentifier.in");
+        finiteAutomataIntegerConstant = new FiniteAutomata("src/FiniteAutomata/FAIntegerConstant.in");
     }
 
     private boolean isIdentifier(String token) {
-        return Pattern.compile("^[_a-zA-Z][_a-zA-Z0-9]*$").matcher(token).matches();
+        //return Pattern.compile("^[_a-zA-Z][_a-zA-Z0-9]*$").matcher(token).matches();
+        return finiteAutomataIdentifier.isValidSequence(token);
     }
 
     private boolean isIntegerConstant(String token) {
-        return Pattern.compile("^0|([+-]?[1-9][0-9]*)$").matcher(token).matches();
+        //return Pattern.compile("^0|([+-]?[1-9][0-9]*)$").matcher(token).matches();
+        return finiteAutomataIntegerConstant.isValidSequence(token);
     }
 
     public void processString(Iterator<String> tokenizer) {

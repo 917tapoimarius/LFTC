@@ -6,59 +6,77 @@ import java.util.*;
 import org.javatuples.Pair;
 
 public class FiniteAutomata {
-    private List<String> states;
+    private final List<String> states;
 
-    private List<String> alphabet;
+    private final List<String> alphabet;
 
-    Map<Pair<String, String>, Object> transitions;
+    HashMap<Pair<String, String>, String> transitions;
 
-    private String initialState;
+    private final String initialState;
 
-    private List<String> finalStates;
+    private final List<String> finalStates;
 
-    private boolean isDeterministic;
+    private final boolean isDeterministic;
 
     public FiniteAutomata(String filePath) throws IOException {
         var bufferedReader = new BufferedReader(new FileReader(filePath));
 
-        String statesLine = bufferedReader.readLine().replace("\n", "");
+        String statesLine = bufferedReader.readLine().strip();
         states = List.of(statesLine.split(","));
 
-        String alphabetLine = bufferedReader.readLine().replace("\n", "");
+        String alphabetLine = bufferedReader.readLine().strip();
         alphabet = List.of(alphabetLine.split(","));
 
-        initialState = bufferedReader.readLine().replace("\n", "");
+        initialState = bufferedReader.readLine().strip();
 
-        String finalStatesLine = bufferedReader.readLine().replace("\n", "");
+        String finalStatesLine = bufferedReader.readLine().strip();
         finalStates = List.of(finalStatesLine.split(","));
 
         transitions = new HashMap<>();
         String transition;
-        while ((transition = bufferedReader.readLine().replace("\n", "")) != null) {
+        while ((transition = bufferedReader.readLine()) != null) {
+            transition = transition.strip();
             String[] transitionElements = transition.split(",");
             String currentState = transitionElements[0];
-            String alphabetElement = transitionElements[1];
+            String symbol = transitionElements[1];
             String nextState = transitionElements[2];
-
-            transitions.compute(new Pair<>(currentState, alphabetElement), (key, previousNextStates) -> {
-                        if (previousNextStates == null)
-                            return nextState;
-                        else if (previousNextStates instanceof String) {
-                            isDeterministic = false;
-                            return new ArrayList<>(Arrays.asList(previousNextStates, nextState));
-                        }
-                        List<String> states = (List<String>) previousNextStates;
-                        states.add(nextState);
-                        return states;
-                    }
-            );
+            transitions.put(new Pair<>(currentState, symbol), nextState);
         }
 
         bufferedReader.close();
+
+        isDeterministic = checkDFA();
     }
 
     public String checkSequence(String sequence){
-        return "";
+        if (!isDeterministic) {
+            return "Language is not DFA!";
+        }
+
+        // Starting from the initial state
+        String currentState = this.initialState;
+
+        // Going through the sequence
+        for (char i : sequence.toCharArray()) {
+            Pair<String, String> transitionKey = new Pair<>(currentState, String.valueOf(i));
+            String nextState = transitions.get(transitionKey);
+
+            if (nextState == null) {
+                return "Invalid transition for input: " + i;
+            }
+
+            currentState = nextState;
+        }
+        if (finalStates.contains(currentState)) {
+            return "Sequence accepted by DFA!";
+        }
+
+        return "Sequence rejected by DFA!";
+    }
+
+    public boolean isValidSequence(String sequence){
+        String checkedSequence = checkSequence(sequence);
+        return checkedSequence.equals("Sequence accepted by DFA!");
     }
 
 
@@ -76,20 +94,45 @@ public class FiniteAutomata {
         StringBuilder stringBuilder = new StringBuilder();
         transitions.forEach((stateAlphabetPair, nextState) -> {
             String currentState = stateAlphabetPair.getValue0();
-            String alphabetElement = stateAlphabetPair.getValue1();
-            stringBuilder.append("δ(%s,%s) = %s\n".formatted(currentState, alphabetElement, nextState));
+            String symbol = stateAlphabetPair.getValue1();
+            stringBuilder.append("δ(%s,%s) = %s\n".formatted(currentState, symbol, nextState));
         });
+        stringBuilder.delete(stringBuilder.length() - 1, stringBuilder.length());
         return stringBuilder.toString();
     }
 
     public String initialStateToString() {
-        return "q0 = %s".formatted(initialState);
+        return "q0 = {%s}".formatted(initialState);
     }
 
     public String finalStatesToString() {
         return "F = " +
                 finalStates.toString().replace("[", "{").replace("]", "}");
     }
+
+    public boolean checkDFA() {
+        List<Map.Entry<Pair<String, String>, String>> transitionList = new ArrayList<>(transitions.entrySet());
+
+        for (int i = 0; i < transitionList.size(); i++) {
+            for (int j = i + 1; j < transitionList.size(); j++) {
+                Map.Entry<Pair<String, String>, String> transition1 = transitionList.get(i);
+                Map.Entry<Pair<String, String>, String> transition2 = transitionList.get(j);
+                // get next states of each transition
+                String nextState1 = transition1.getValue();
+                String nextState2 = transition2.getValue();
+
+                // if the 2 transitions have the same current state and symbol, but different next states it is not a
+                // DFA
+                if (transition1.getKey().equals(transition2.getKey()) &&
+                        !nextState1.equals(nextState2)){
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
 
     @Override
     public String toString() {
