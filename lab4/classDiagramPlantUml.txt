@@ -1,7 +1,13 @@
 @startuml
-
 class Main {
-  +main(args: String[]): void
+    +scanner: Scanner
+    -myScanner: MyScanner
+    -finiteAutomata: FiniteAutomata
+
+    +menu()
+    +finiteAutomataMenu()
+    +finiteAutomataOptionHandler()
+    +main(args: String[]): void
 }
 
 class HashNode<K, V> {
@@ -43,21 +49,45 @@ class MyScanner {
   -reservedWords: ArrayList<String>
   -operatorsForPattern: ArrayList<String>
   -separatorsForPattern: ArrayList<String>
-  -pattern: Pattern
+  pattern: Pattern
   -symbolTable: SymbolTable<String>
   -programInternalForm: ProgramInternalForm
   -programLines: List<String>
+  finiteAutomataIdentifier: FiniteAutomata
+  finiteAutomataIntegerConstant: FiniteAutomata
+
   +MyScanner(filePath: String)
   -isIdentifier(token: String): boolean
   -isIntegerConstant(token: String): boolean
-  +readString(tokenizer: Iterator<String>): void
+  +processString(tokenizer: Iterator<String>): void
   +scan(): void
   +writeToFiles(): void
+}
+
+class FiniteAutomata {
+    -states: List<String>
+    -alphabet: List<String>
+    -transitions: HashMap<Pair<String, String>, String>
+    -initialState: String
+    -finalStates: List<String>
+    -isDeterministic: boolean
+
+    +FiniteAutomata(filePath: String)
+    +checkSequence(sequence: String): String
+    +isValidSequence(sequence: String): boolean
+    +statesToString(): String
+    +alphabetToString(): String
+    +transitionsToString(): String
+    +initialStateToString(): String
+    +finalStatesToString(): String
+    -checkDFA(): boolean
+    +toString(): String
 }
 
 Main --o MyScanner
 SymbolTable --o HashNode
 MyScanner --o ProgramInternalForm
 MyScanner --o SymbolTable
-
+Main --o FiniteAutomata
+MyScanner --o FiniteAutomata
 @enduml

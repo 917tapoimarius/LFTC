@@ -110,7 +110,7 @@ public class FiniteAutomata {
                 finalStates.toString().replace("[", "{").replace("]", "}");
     }
 
-    public boolean checkDFA() {
+    private boolean checkDFA() {
         List<Map.Entry<Pair<String, String>, String>> transitionList = new ArrayList<>(transitions.entrySet());
 
         for (int i = 0; i < transitionList.size(); i++) {
