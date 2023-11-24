@@ -53,10 +53,8 @@ public class FiniteAutomata {
             return "Language is not DFA!";
         }
 
-        // Starting from the initial state
         String currentState = this.initialState;
 
-        // Going through the sequence
         for (char i : sequence.toCharArray()) {
             Pair<String, String> transitionKey = new Pair<>(currentState, String.valueOf(i));
             String nextState = transitions.get(transitionKey);
