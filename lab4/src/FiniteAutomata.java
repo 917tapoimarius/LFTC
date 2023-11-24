@@ -113,7 +113,7 @@ public class FiniteAutomata {
     private boolean checkDFA() {
         List<Map.Entry<Pair<String, String>, String>> transitionList = new ArrayList<>(transitions.entrySet());
 
-        for (int i = 0; i < transitionList.size(); i++) {
+        for (int i = 0; i < transitionList.size() - 1; i++) {
             for (int j = i + 1; j < transitionList.size(); j++) {
                 Map.Entry<Pair<String, String>, String> transition1 = transitionList.get(i);
                 Map.Entry<Pair<String, String>, String> transition2 = transitionList.get(j);
