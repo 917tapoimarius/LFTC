@@ -7,27 +7,27 @@
 <valid_symbol>::=<letter>|<digit>|_
 <constant>::= <string> | <char> | <integer>
 <declist>::= <declaration> | <declaration> "," <declist>
-<declaration>::= <type> <identifier> | <declaration_and_assign_statement>
+<declaration>::= <type> <identifier> | <declaration_and_assign_statement> | <array_declaration>
 <declaration_and_assign_statement> = <type> <identifier> "=" <consant>
-<type1>::= "int" | "char" | "string"
+<type>::= "int" | "char" | "string"
 <assign_satement>::= <identifier> "=" <expression> | <array_element>=<expression>
-<array_declaration>::= <declaration> "=" "list()"
+<array_declaration>::= <type> <identifier> "=" "list()"
 <array_element>:== <identifier> "["<integer>"]"
-<type>::=<type1>|<array_declaration>
 <compound_statement>::= "{"<statement_list>"}"
 <statement_list>::=<statement> ";" | <statement> ";" <statement_list>
 <statement>::= <declaration> | <simple_statement> | <structured_statement>
-<simple_statement>::= <assign_statement> | <iostatement>
+<simple_statement>::= <assign_statement> | <io_statement>
 <io_statement>::= "read" "(" <identifier> ")" | "write" "(" <identifier> ")"
 <priority2_operator>::= "+" | "-"
 <proirity1_operator>::= "/" | "*" | "%"
-<expression>::=<term>|<term><operator1><term>
-<term>::=<factor>|<factor><operator2><factor>
-<factor>::=<identifier>|<constant>|"("<expression>")"
+<expression>::=<term>|<term><priority1_operator><term>
+<term>::=<factor>|<factor><proirity2_operator><factor>
+<factor>::=<integer_constant_or_identifier>|"("<expression>")"
 <structured_statement>::= <compound_statement> | <if_statement> | <while_stamtent>
 <simple_statement>::= <assign_statement>| <io_statement>
 <while_statement>::= "while" "(" <condition> ")" "{" <statement> "}"
-<if_statement>::= "if" "("<condition>")" "{" <statement> "}" | "if" "("<condition>")" "{" <statement> "}" "else" "{" <statement> "}" | "if" "("<condition>")" "{" <statement> "}" "else" <if_statement> 
+<if_statement>::= "if" "("<condition>")" "{" <statement_list > "}" | "if" "("<condition>")" "{" <statement_list> "}" "else" "{" <statement_list > "}" | "if" "("<condition>")" "{" <statement_list> "}" "else" <if_statement> 
 <condition>::= <expression> | <expression><relation><condition>
 <relation>::= "<" | "<=" | "==" | ">=" | ">" | "!=" | "and" | "or"
 <comment>::= "#"<string>"#"
+<integer_constant_or_identifier> = <integer> | <identifier>

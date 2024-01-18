@@ -1,5 +1,7 @@
 {
-	int a=list(), 2n, sum=0;
+	int a=list()
+	int 2n;
+	int sum=0;
 	read(n);
 	int i=01;
 	while(i<=n){
